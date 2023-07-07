@@ -1,0 +1,4 @@
+# Reportdesk-AI
+
+
+Introducing Reportdesk, a cutting-edge Flask-based tool powered by Generative AI technology for healthcare services, with a primary focus on genomics. Reportdesk is equipped with a fully functional chatbot that adeptly addresses user queries related to healthcare. Leveraging its extensive training on patient documents, Reportdesk can provide insightful responses tailored to specific medical inquiries. In cases where the answer cannot be found within the existing document database, Reportdesk seamlessly utilises the OpenAI API to generate accurate and contextually relevant responses, ensuring users receive the most up-to-date and reliable information. Experience the future of healthcare with Reportdesk, empowering individuals with personalised and comprehensive healthcare knowledge.
