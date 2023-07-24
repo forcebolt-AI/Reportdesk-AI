@@ -25,7 +25,7 @@ $(document).ready(function () {
                 $.each(data, function (index, value) {
 
                     console.log(data);
-                    $('#questionappend').append('<li class="questionli" onclick="sendParagraphText(this)"> ' + value[1] + '</li>');
+                    $('#questionappend').append('<div class="questionspan"><span> Q' + (index + 1) + '. ' + '</span><li class="questionli" onclick="sendParagraphText(this)"> ' + value[1] + '</li></div>');
                     scrollToBottomPrompt()
 
                 });
@@ -42,6 +42,11 @@ $(document).ready(function () {
 });
 $(document).ready(function () {
     $("#searchq").click(function () {
+        const divElement = document.querySelector('#questionappend'); // Replace 'yourDivId' with the actual ID of your div element
+        const liElements = divElement.querySelectorAll('li');
+        const totalCount = liElements.length;
+        console.log(totalCount);
+        const questionstring = $('#exampleFormControlTextarea1').val();
         if (questionstring.toLowerCase() == 'hi' || questionstring.toLowerCase() == 'hello') {
             $('#gptbody').append('<div class="footer question"><p>' + $('#exampleFormControlTextarea1').val() + '</p></div>');
             $('#gptbody').append('<div class="footer answer"><p>' + 'Hello! How can I assist you today?' + '</p></div>');
@@ -49,7 +54,7 @@ $(document).ready(function () {
 
 
 
-            $('#questionappend').append('<li class="questionli" onclick="sendParagraphText(this)"> ' + $('#exampleFormControlTextarea1').val() + '</li>');
+            $('#questionappend').append('<div class="questionspan"><span> Q' + (totalCount + 1) + '. ' + '</span><li class="questionli" onclick="sendParagraphText(this)"> ' + $('#exampleFormControlTextarea1').val() + '</li></div>');
             $('#gptbody').append('<div class="footer question"><p>' + $('#exampleFormControlTextarea1').val() + '</p></div>');
             scrollToBottomPrompt()
             var formData = new FormData();
@@ -90,6 +95,10 @@ var input = document.getElementById("exampleFormControlTextarea1");
 input.addEventListener("keypress", function (event) {
     // If the user presses the "Enter" key on the keyboard
     if (event.key === "Enter") {
+        const divElement = document.querySelector('#questionappend'); // Replace 'yourDivId' with the actual ID of your div element
+        const liElements = divElement.querySelectorAll('li');
+        const totalCount = liElements.length;
+        console.log(totalCount);
         let questionstring = $('#exampleFormControlTextarea1').val()
 
         let more = questionstring.search("more");
@@ -165,7 +174,7 @@ input.addEventListener("keypress", function (event) {
         }
         else {
 
-            $('#questionappend').append('<li class="questionli" onclick="sendParagraphText(this)"> ' + $('#exampleFormControlTextarea1').val() + '</li>');
+            $('#questionappend').append('<div class="questionspan"><span> Q' + (totalCount + 1) + '. ' + '</span><li class="questionli" onclick="sendParagraphText(this)"> ' + $('#exampleFormControlTextarea1').val() + '</li></div>');
             $('#gptbody').append('<div class="footer question"><p>' + $('#exampleFormControlTextarea1').val() + '</p></div>');
             scrollToBottomPrompt()
             var formData = new FormData();
