@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <div class="sidebar_blog_2">
-                    <h4>Searched History</h4>
+                    <h4>Previously Asked Questions</h4>
                     <ul class="list-unstyled components" id="questionappend">
                         <!-- {% for item in sucess_msg %}
                         <li class="questionli" onclick="sendParagraphText(this)"> {{ item[1] }}</li>
@@ -93,14 +93,14 @@
                 </div>
 
                 <div class="bottom" style="position:absolute; bottom:2px">
-                    <div class="sidebar_blog_2">
+                    <!-- <div class="sidebar_blog_2">
                         <h4>Settings</h4>
                         <ul class="list-unstyled components">
 
 
                         </ul>
 
-                    </div>
+                    </div> -->
                     <div class="sidebar_blog_1">
                         <div class="sidebar-header">
                             <div class="logo_section">
@@ -131,7 +131,7 @@
                 <div class="topbar">
                     {% if sucess_msg %}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Logged In !!!</strong><p>Welcome to Report Desk ChatBot</p>
+                        <strong>Logged In !!!</strong><p>Welcome to ReportDesk ChatBot</p>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -139,7 +139,7 @@
 
                     {% endif %}
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <div class="full">
+                        <div class="fullnav">
                             <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i
                                     class="fa fa-bars"></i></button>
                             <!-- <div class="logo_section">
@@ -148,7 +148,7 @@
                                         alt="#" /></a>
                             </div> -->
                             <div class="chatheading">
-                                <p class="headmail">Report Desk GPT</p>
+                                <p class="headmail">ReportDesk GPT</p>
                             </div>
                             <div class="logout">
                                 <a href="/userlogout"><button class="btn btn-sucess" id="logoutbtn">Logout</button></a>
@@ -170,11 +170,11 @@
 
                         <div class="chat" id="gptbody">
                             <div id="topmaindiv">
-                                <h2 align="center">Report Desk AI for Healthcare</h2>
+                                
                                 <div class="row mainrow">
                                     <div class="col-sm-4  ">
                                         <div class="row bodyheading">
-                                            <h2>Examples</h2>
+                                            <h4>What you can ask?</h4>
                                         </div>
                                         <div class="row bodyli">
                                             <ul>
@@ -188,7 +188,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="row bodyheading">
-                                            <h2>Capabilities</h2>
+                                            <h4>What I can do?</h4>
                                         </div>
                                         <div class="row bodyli">
                                             <ul>
@@ -202,7 +202,7 @@
                                     <div class="col-sm-4">
                                         <div class="innerdiv">
                                         <div class="row bodyheading">
-                                            <h2>Limitations</h2>
+                                            <h4>What are my limitations?</h4>
                                         </div>
                                         <div class="row bodyli">
                                             <ul>
@@ -225,7 +225,7 @@
                             </div>
 
                         </div>
-                        <div class=" searchquestion" style="bottom: 2%;position: absolute;width: 89%;">
+                        <div class=" searchquestion">
                             <form>
                                 <div class="form-group searchfooter">
                                     <input type="eamil" hidden id="userprofileid" value="{{ session['user_id'] }}">

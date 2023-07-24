@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, Response,session,flash,url_for
 import urllib.parse
-from LLM import get_answer, give_keywords
+# from LLM import get_answer, give_keywords
+from LLM import  LLM_ANSWER
 import pandas as pd
 from sqlalchemy import create_engine
 #import mysql.connector
@@ -24,6 +25,7 @@ from datetime import timedelta
 
 app = Flask(__name__)
 
+LLM_MODEL= LLM_ANSWER()
 
 CORS(app)
 ## Configure OpenAI API Key
@@ -103,7 +105,7 @@ def register():
         username = session.get('username')
         return render_template('index.html', username=username)
     else:
-        return redirect('/login')
+        return redirect('/chatbotsignup')
 
 
 @app.route('/adminlogin', methods=['POST'])
@@ -121,7 +123,7 @@ def adminlogin():
 
     if not result[0]:
         error_msg = 'Username is required.'
-        return render_template('login.html', error_msg=error_msg)
+        return render_template('signin.html', error_msg=error_msg)
         
     else:
         if result[0][2] == password:
@@ -161,7 +163,7 @@ def adminlogin():
         else:
             
             error_msg = 'Password is Incorrect'
-            return render_template('login.html', error_msg=error_msg)
+            return render_template('signin.html', error_msg=error_msg)
     
 
 
@@ -183,7 +185,7 @@ def userlogout():
 
 def answer():
     ques = request.form.get('question')
-    similar_docs = give_keywords(ques)
+    # similar_docs = give_keywords(ques)
     email= request.form.get('email')
     usersquestions= request.form.get('usersquestions')
     
@@ -254,7 +256,62 @@ def answer():
                         "remote monitoring", "point of care testing", "health informatics","population health management",
                         "symptoms","more","additional","fever","Extra","Further","Added","Excess","Plus","Augmented","Extended",
                         "Advanced","Enhanced","hello","hi", "stakeholder", "heart attack", "healthcare", "medicine",
-                        "market expansion"]
+                        "market expansion", "WHO","PRC", "Pfizer", "Novartis AG", "Roche Holding AG", "Merck &amp Co", 
+                        "GlaxoSmithKline", "Johnson &amp; Johnson", "Sanofi", "AbbVie", "AstraZeneca", "Bayer AG", 
+                        "Eli Lilly and Company", "Bristol-Myers Squibb", "Amgen", "Gilead Sciences", "Teva Pharmaceutical",
+                        "Novo Nordisk", "Takeda Pharmaceutical", "Boehringer Ingelheim", "Allergan", "Astellas",
+                        "Good Morning", "morning", "Good afternoon", "Good night", "night", "afternoon", "noon", "AAV", 
+                        "rAAV", "viral vectors", "adenoviruses", "lentiviruses", "adeno-associated virus",
+                        "lipid-based nanoparticles", "electroporation", "therapeutic genes", "CRISPR-Cas9", "TALENs",
+                        "Transcription Activator-Like Effector Nucleases", "ZFNs", "Zinc Finger Nucleases",
+                        "forge biologics", "Catalent", "WuXi Advanced Therapies", "Lonza", "Vigene Biosciences",
+                        "bluebird bio", "Oxford Biomedica", "Thermo Fisher Scientific", "Genezen", "ABL",
+                        "DiNAMIQS", "KRIYA", "Jaguar Gene Therapy", "Elevatebio", "AGC Biologics", "Aldevron",
+                        "Batavia Biosciences", "BioNTech IMFS", "CEVEC Pharmaceuticals", "Cobra Biologics", "Cytiva",
+                        "FUJIFILM Diosynth Biotechnologies", "Genethon", "MolMed", "Paragon Bioservices",
+                        "SIRION Biotech", "Yposkesi", "AveXis (now a part of Novartis)", "AskBio", "Eurofins Scientific",
+                        "FinVector", "Généthon", "Homology Medicines", "MassBiologics", "MaxCyte", "MeiraGTx",
+                        "Mustang Bio", "Orchard Therapeutics", "Orgenesis", "Polyplus-transfection", "REGENXBIO",
+                        "Spark Therapeutics", "uniQure", "Adverum Biotechnologies", "Amicus Therapeutics",
+                        "Anova Gene", "Benitec Biopharma", "Dimension Therapeutics (acquired by Ultragenyx)",
+                        "Editas Medicine", "Freeline Therapeutics", "GenSight Biologics", "Gyroscope Therapeutics",
+                        "LogicBio Therapeutics", "Nightstar Therapeutics (acquired by Biogen)", "Passage Bio",
+                        "Precision BioSciences", "Rocket Pharmaceuticals", "Sangamo Therapeutics",
+                        "Solid Biosciences", "Valerion Therapeutics", "Voyager Therapeutics", "Zinc Finger Therapeutics",
+                        "HEK293", "adeno-associated viral vectors", "Luxturna", "rAAV2", "RPE65", "Zolgensma", "rAAV9",
+                        "retinal dystrophy", "Spinal Muscular Atrophy", "haemophilia", "ASPIRO",
+                        "X-linked myotubular myopathy", "rAAV8", "Duchenne muscular dystrophy", "Pfizer", "HeLa", "HeLaS3",
+                        "Stable producer cell lines (PCL)", "ELEVECTA", "HEK", "CAP cells", "CHO cells", "insect cells",
+                        "KCNN2", "antibodies", "serotypes", "Capsid engineering", "Apellis Pharmaceuticals",
+                        "Catalent Pharma Solutions", "Cytiva", "World Courier", "Covance", "Beam Therapeutics", "Novartis",
+                        "Cell and Gene Therapy Catapult", "Asklepios BioPharmaceutical, Inc. (AskBio)",
+                        "Affinia Therapeutics", "Resilience", "Precision BioSciences, Inc.", "Sangamo Therapeutics, Inc.",
+                        "Astellas Gene Therapies", "WuXi AppTec", "Labcorp Drug Development", "Spark Therapeutics, Inc.",
+                        "Kriya Therapeutics, Inc.", "Homology Medicines, Inc.", "REGENXBIO Inc.", "Iveric Bio",
+                        "GenScript Europe", "Shape Therapeutics Inc.", "Akouos", "Poseida Therapeutics, Inc.",
+                        "Graphite Bio", "enGene", "Dyno Therapeutics", "MaxCyte, Inc.", "Andelyn Biosciences",
+                        "Tune Therapeutics", "SwanBio Therapeutics", "AveXis, Inc.", "Taysha Gene Therapies",
+                        "CYTENA", "Excelya", "Allucent", "Gene Therapy Program | University of Pennsylvania",
+                        "BioAgilytix", "Ori Biotech", "TaqMan RT-PCR", "ferret", "T cell responses", "IFNg-ELISpot assay",
+                        "AAV2.5T capsid", "epitope mapping", "synthetic peptides", "amino acid sequence", "VP1",
+                        "liver enzymes", "prednisone", "factor IX coagulant activity", "AAV gene therapy",
+                        "Leber's hereditary optic neuropathy", "corticosteroids", "ocular inflammation",
+                        "intravitreal administration", "rAAV2/2-ND4", "methylprednisolone", "azathioprine", "cyclosporine",
+                        "orthotopic lung transplantation", "plasma gLuc activity", "repeat dosing", "HEK293 cells",
+                        "AAV capsid", "pAV2.5-Trepcap", "adenovirus helper", "pAd4.1", "AAV pro-viral vector",
+                        "AAV2 ITR sequences", "rAAV vectors", "iodixanol cushion", "cesium chloride", "titers",
+                        "DNase-I-resistant particles", "SRA", "Spirovant Sciences", "lung-resident T cells",
+                        "lymph nodes", "gLuc expression", "resident T cell suppression", "cytokines", "splenocyte",
+                        "pro-inflammatory cytokines", "TaqMan qPCR", "transgenes", "SDS-PAGE", "animal dosing",
+                        "juvenile wild-type ferrets", "ketamine", "xylazine", "mutated capsids", "apical transduction",
+                        "HAE", "air-liquid interphase", "CFTR minigene", "CFTRDR", "synthetic promoter/enhancer", "SP183",
+                        "Baytril", "bacterial infection", "gLuc activity", "plasma", "BALF", "jugular vein",
+                        "heparinized tubes", "euthanized", "Euthasol", "ANOVA", "IC50", "AAV2.5T", "immunosuppression",
+                        "TriIS", "capsidbinding", "Gene therapy", "Genetic modification", "Genetic engineering",
+                        "CRISPR", "Cas9", "Viral vector", "Adeno-associated virus (AAV)", "Lentivirus", "Retrovirus",
+                        "Ex vivo gene therapy", "In vivo gene therapy", "Antisense oligonucleotides",
+                        "RNA interference (RNAi)", "Small interfering RNA (siRNA)", "Gene editing", "Gene silencing",
+                        "Gene knockdown", "Gene knockout", "Gene knockin", "Gen", "AveXis"]
 
     def is_healthcare_question(question):
         question = question.lower()
@@ -276,53 +333,55 @@ def answer():
 
     lst = ["don't know.", "don't know the answer.", "information does not provide","not in the context",
            "The information provided does not specify the number","According to the given context",
-           "it does not provide information", "Based on the given context","apologies","context","sorry"]
+           "it does not provide information", "Based on the given context","apologies","sorry"]
+    
     if is_healthcare_question(user_input):
             # Process the question with the chatbot
-        connection = sqlite3.connect(DATABASE)
-        cursor = connection.cursor()
+       
+        query = ques
+        answer = LLM_MODEL.get_answer(query)
         
-        cursor.execute("SELECT answer FROM questions where question =?", (ques,))
-        result = cursor.fetchall()
-        #print("Result: ", result) 
+        #print(ques)
         
-        if result:
+        # if ("context" not in answer) or ("don't know" not in answer) or ("apologize" not in answer):
+        if check_pdf_ans(answer, lst):
+            session["prev_question"] = ques
+            session["prev_answer"] = answer
+            #print("PDF")
+            connection = sqlite3.connect(DATABASE)
+            cursor = connection.cursor()
+                    
+            cursor.execute("INSERT INTO questions (question, answer,useremail,ans_by_gpt,ans_by_pdf,ans_by_db) VALUES (?, ?, ?,?,?,?)", (ques, answer,email,'NO','YES','NO'))
+            connection.commit()
+                
+            cursor.close()
+                    ## Returning new answer as response
+            return answer       
+        
+        else :
+            
+            connection = sqlite3.connect(DATABASE)
+            cursor = connection.cursor()
+            
+            cursor.execute("SELECT answer FROM questions where question =?", (ques,))
+            result = cursor.fetchall()
+            #print("Result: ", result) 
+            if result:
             ## If a match is found, return the answer 
             #print(result[0][0])
                 session["prev_question"] = ques
                 session["prev_answer"] = result[0][0]
-                connection = sqlite3.connect(DATABASE)
-                cursor = connection.cursor()
-                connection = sqlite3.connect(DATABASE)
-                cursor = connection.cursor()
+                # connection = sqlite3.connect(DATABASE)
+                # cursor = connection.cursor()
+                # connection = sqlite3.connect(DATABASE)
+                # cursor = connection.cursor()
                         
-                cursor.execute("INSERT INTO questions (question, answer,useremail,ans_by_gpt,ans_by_pdf,ans_by_db) VALUES (?, ?, ?,?,?,?)", (ques, result[0][0],email,'NO','NO','YES'))
-                connection.commit()
+                # cursor.execute("INSERT INTO questions (question, answer,useremail,ans_by_gpt,ans_by_pdf,ans_by_db) VALUES (?, ?, ?,?,?,?)", (ques, result[0][0],email,'NO','NO','YES'))
+                # connection.commit()
                     
-                cursor.close()
+                # cursor.close()
                 return result[0][0]
-             
-        else :
-            query = ques
-            answer = get_answer(query, similar_docs)
-            #print(ques)
-            
-            # if ("context" not in answer) or ("don't know" not in answer) or ("apologize" not in answer):
-            if check_pdf_ans(answer, lst):
-                session["prev_question"] = ques
-                session["prev_answer"] = answer
-                #print("PDF")
-                connection = sqlite3.connect(DATABASE)
-                cursor = connection.cursor()
-                        
-                cursor.execute("INSERT INTO questions (question, answer,useremail,ans_by_gpt,ans_by_pdf,ans_by_db) VALUES (?, ?, ?,?,?,?)", (ques, answer,email,'NO','YES','NO'))
-                connection.commit()
-                    
-                cursor.close()
-                    ## Returning new answer as response
-                
-                return answer
-            
+         
             else:
                 ## If no match is found, ask chatGPT and return the answers1 = 'Hello'
                 s2 = ''
